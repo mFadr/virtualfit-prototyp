@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VirtualFit – Videa</title>
+<style>
+    :root {
+        --area:        #c9c9c9;
+        --area-border: #a8a8a8;
+        --content:     #2b2b2b;
+        --content-2:   #3a3a3a;
+        --action:      #1f6b53;
+        --action-hover:#1a5a45;
+        --promo:       #8a4a17;
+        --text-light:  #ffffff;
+        --text-muted:  #d0d0d0;
+        --text-dark:   #1a1a1a;
+        --page-bg:     #f4f4f4;
+        --dashed:      #8a8a8a;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, sans-serif;
+        background: var(--page-bg);
+        color: var(--text-dark);
+        padding: 20px;
+        min-height: 100vh;
+    }
+
+    .prototype-wrapper {
+        max-width: 1100px;
+        margin: 0 auto;
+        border: 2px dashed var(--dashed);
+        background: #ffffff;
+        padding: 12px;
+    }
+
+    .section-label {
+        text-align: center;
+        font-size: 13px;
+        color: #888;
+        font-style: italic;
+        margin: 22px 0 8px;
+        letter-spacing: 0.5px;
+    }
+
+    /* ---------- HEADER ---------- */
+    .header {
+        background: var(--area);
+        border: 1px dashed var(--area-border);
+        padding: 14px 20px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+    .logo { background: var(--content); color: var(--text-light); padding: 12px 30px; font-weight: bold; letter-spacing: 1px; }
+    .menu-icon { background: var(--content); color: var(--text-light); padding: 8px 10px; font-size: 14px; display: inline-block; }
+    .nav { display: flex; gap: 22px; flex: 1; align-items: center; }
+    .nav a { color: #555; text-decoration: none; font-size: 15px; }
+    .nav a:hover { color: var(--text-dark); }
+    .btn { padding: 10px 22px; border: none; cursor: pointer; font-size: 14px; font-family: inherit; border-radius: 2px; }
+    .btn-action { background: var(--action); color: var(--text-light); }
+    .btn-content { background: var(--content); color: var(--text-light); }
+
+    /* ---------- PAGE TITLE ---------- */
+    .page-title {
+        background: var(--area);
+        border: 1px dashed var(--area-border);
+        margin-top: 4px;
+        padding: 24px 30px;
+    }
+    .page-title h1 { font-size: 24px; color: var(--text-dark); margin-bottom: 6px; }
+    .page-title p { color: #777; font-size: 14px; }
+
+    /* ---------- VIDEO PLAYERY (2x) ---------- */
+    .video-grid {
+        margin-top: 4px;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 22px;
+    }
+    .video-block {
+        background: var(--content);
+        border-radius: 6px;
+        padding: 16px;
+        color: var(--text-light);
+    }
+    /* placeholder pro vložení videa (16:9) */
+    .video-slot {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        background: var(--content-2);
+        border: 1px dashed #666;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 10px;
+        color: var(--text-muted);
+        overflow: hidden;
+    }
+    .video-slot::before,
+    .video-slot::after {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+    }
+    .video-slot::before {
+        background:
+            linear-gradient(to top right, transparent 49.6%, #555 49.6%, #555 50.4%, transparent 50.4%),
+            linear-gradient(to top left, transparent 49.6%, #555 49.6%, #555 50.4%, transparent 50.4%);
+        opacity: 0.4;
+    }
+    .play-icon {
+        position: relative;
+        z-index: 2;
+        width: 0; height: 0;
+        border-style: solid;
+        border-width: 16px 0 16px 28px;
+        border-color: transparent transparent transparent var(--text-light);
+        opacity: 0.85;
+    }
+    .slot-label {
+        position: relative;
+        z-index: 2;
+        font-size: 13px;
+        font-style: italic;
+    }
+    .video-caption {
+        margin-top: 14px;
+    }
+    .video-caption h3 { font-size: 16px; margin-bottom: 4px; }
+    .video-caption p { font-size: 13px; color: var(--text-muted); }
+    .video-meta {
+        margin-top: 10px;
+        font-size: 12px;
+        color: var(--text-muted);
+        display: flex;
+        gap: 16px;
+        border-top: 1px dashed #555;
+        padding-top: 10px;
+    }
+
+    /* ---------- FOOTER ---------- */
+    .footer {
+        background: var(--area);
+        border: 1px dashed var(--area-border);
+        padding: 28px 30px;
+        margin-top: 18px;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        gap: 20px;
+    }
+    .footer-links { display: flex; gap: 32px; flex-wrap: wrap; }
+    .footer-links a { color: #666; text-decoration: none; font-size: 14px; }
+    .footer-copy { color: #888; font-size: 12px; margin-top: 12px; grid-column: 1 / -1; }
+    .social { display: flex; gap: 8px; }
+    .social-icon { background: var(--content); width: 36px; height: 36px; border-radius: 3px; }
+
+    /* ---------- LEGENDA ---------- */
+    .legend {
+        margin-top: 24px;
+        padding: 16px;
+        border-top: 1px dashed var(--dashed);
+        display: flex;
+        gap: 24px;
+        justify-content: center;
+        flex-wrap: wrap;
+        font-size: 13px;
+        color: #555;
+    }
+    .legend-item { display: flex; align-items: center; gap: 8px; }
+    .legend-swatch { width: 18px; height: 18px; border-radius: 2px; border: 1px solid rgba(0,0,0,0.15); }
+    .sw-area { background: var(--area); }
+    .sw-content { background: var(--content); }
+    .sw-action { background: var(--action); }
+    .sw-promo { background: var(--promo); }
+
+    @media (max-width: 800px) {
+        .video-grid { grid-template-columns: 1fr; }
+        .nav { flex-wrap: wrap; }
+    }
+</style>
+</head>
+<body>
+
+<div class="prototype-wrapper">
+
+    <!-- ===================== HEADER ===================== -->
+    <header class="header">
+        <div class="logo">LOGO</div>
+        <span class="menu-icon">☰ Menu</span>
+        <nav class="nav">
+            <a href="#nabidka">Nabídka</a>
+            <a href="#lekce">Lekce</a>
+            <a href="#videa">Videa</a>
+            <a href="#cenik">Ceník</a>
+        </nav>
+        <button class="btn btn-content">Přihlásit</button>
+        <button class="btn btn-action">Začít zdarma</button>
+    </header>
+
+    <!-- ===================== PAGE TITLE ===================== -->
+    <div class="page-title">
+        <h1>Videa</h1>
+        <p>Stránka připravená pro vložení dvou tréninkových videí. Prostor pro přehrávač je vyznačen rámečkem 16:9.</p>
+    </div>
+
+    <!-- ===================== VIDEO PLAYERY ===================== -->
+    <p class="section-label">Tréninková videa</p>
+    <div class="video-grid">
+
+        <!-- Video 1 -->
+        <div class="video-block">
+            <div class="video-slot">
+                <div class="play-icon"></div>
+                <div class="slot-label">[ Místo pro vložení videa 1 ]</div>
+            </div>
+            <div class="video-caption">
+                <h3>Video 1 — Název videa</h3>
+                <p>Krátký popis tréninkového videa.</p>
+                <div class="video-meta">
+                    <span>Délka: 00:00</span>
+                    <span>Kategorie: —</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Video 2 -->
+        <div class="video-block">
+            <div class="video-slot">
+                <div class="play-icon"></div>
+                <div class="slot-label">[ Místo pro vložení videa 2 ]</div>
+            </div>
+            <div class="video-caption">
+                <h3>Video 2 — Název videa</h3>
+                <p>Krátký popis tréninkového videa.</p>
+                <div class="video-meta">
+                    <span>Délka: 00:00</span>
+                    <span>Kategorie: —</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ===================== FOOTER ===================== -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="#o-nas">O nás</a>
+            <a href="#kontakt">Kontakt</a>
+            <a href="#gdpr">GDPR</a>
+            <a href="#podminky">Podmínky</a>
+        </div>
+        <div class="social" aria-label="Sociální sítě">
+            <div class="social-icon"></div>
+            <div class="social-icon"></div>
+            <div class="social-icon"></div>
+        </div>
+        <div class="footer-copy">© 2025 VirtualFit &nbsp;·&nbsp; Soc. sítě</div>
+    </footer>
+
+    <!-- ===================== LEGENDA ===================== -->
+    <div class="legend">
+        <div class="legend-item"><span class="legend-swatch sw-area"></span>Oblast / sekce</div>
+        <div class="legend-item"><span class="legend-swatch sw-content"></span>Obsah (dokument/data)</div>
+        <div class="legend-item"><span class="legend-swatch sw-action"></span>Tlačítko / interakce</div>
+        <div class="legend-item"><span class="legend-swatch sw-promo"></span>Promo / zpráva</div>
+    </div>
+
+</div>
+
+</body>
+</html>
