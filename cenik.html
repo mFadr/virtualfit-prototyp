@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VirtualFit – Ceník</title>
+<style>
+    :root {
+        --area:        #c9c9c9;
+        --area-border: #a8a8a8;
+        --content:     #2b2b2b;
+        --content-2:   #3a3a3a;
+        --action:      #1f6b53;
+        --action-hover:#1a5a45;
+        --promo:       #8a4a17;
+        --text-light:  #ffffff;
+        --text-muted:  #d0d0d0;
+        --text-dark:   #1a1a1a;
+        --page-bg:     #f4f4f4;
+        --dashed:      #8a8a8a;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, sans-serif;
+        background: var(--page-bg);
+        color: var(--text-dark);
+        padding: 20px;
+        min-height: 100vh;
+    }
+
+    .prototype-wrapper {
+        max-width: 1100px;
+        margin: 0 auto;
+        border: 2px dashed var(--dashed);
+        background: #ffffff;
+        padding: 12px;
+    }
+
+    .section-label {
+        text-align: center;
+        font-size: 13px;
+        color: #888;
+        font-style: italic;
+        margin: 22px 0 8px;
+        letter-spacing: 0.5px;
+    }
+
+    /* ---------- HEADER ---------- */
+    .header {
+        background: var(--area);
+        border: 1px dashed var(--area-border);
+        padding: 14px 20px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+    .logo { background: var(--content); color: var(--text-light); padding: 12px 30px; font-weight: bold; letter-spacing: 1px; }
+    .menu-icon { background: var(--content); color: var(--text-light); padding: 8px 10px; font-size: 14px; display: inline-block; }
+    .nav { display: flex; gap: 22px; flex: 1; align-items: center; }
+    .nav a { color: #555; text-decoration: none; font-size: 15px; }
+    .nav a:hover { color: var(--text-dark); }
+    .btn { padding: 10px 22px; border: none; cursor: pointer; font-size: 14px; font-family: inherit; border-radius: 2px; }
+    .btn-action { background: var(--action); color: var(--text-light); }
+    .btn-content { background: var(--content); color: var(--text-light); }
+
+    /* ---------- PAGE TITLE ---------- */
+    .page-title {
+        background: var(--area);
+        border: 1px dashed var(--area-border);
+        margin-top: 4px;
+        padding: 24px 30px;
+    }
+    .page-title h1 { font-size: 24px; color: var(--text-dark); margin-bottom: 6px; }
+    .page-title p { color: #777; font-size: 14px; }
+
+    /* ---------- PROMO BAR ---------- */
+    .promo-bar {
+        background: var(--promo);
+        color: var(--text-light);
+        padding: 16px 24px;
+        margin-top: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 15px;
+        border-radius: 3px;
+    }
+    .promo-close {
+        background: var(--content);
+        color: var(--text-light);
+        border: none;
+        width: 30px; height: 30px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    /* ---------- CENÍKOVÉ TABULKY ---------- */
+    .price-table {
+        margin-top: 4px;
+        border-radius: 6px;
+        overflow: hidden;
+        border: 1px solid var(--area-border);
+    }
+    .price-table table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+    }
+    .price-table caption {
+        background: var(--content);
+        color: var(--text-light);
+        padding: 14px 18px;
+        font-size: 17px;
+        font-weight: bold;
+        text-align: left;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .price-table.accent caption { background: var(--action); }
+    .cap-icon {
+        width: 24px; height: 24px;
+        border: 2px solid var(--text-muted);
+        border-radius: 50%;
+        flex: none;
+    }
+    .price-table thead th {
+        background: var(--content-2);
+        color: var(--text-light);
+        text-align: left;
+        padding: 11px 18px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+    .price-table thead th.col-price,
+    .price-table tbody td.col-price { text-align: right; white-space: nowrap; }
+    .price-table tbody td {
+        padding: 12px 18px;
+        border-top: 1px solid #e2e2e2;
+        background: #fafafa;
+        vertical-align: top;
+    }
+    .price-table tbody tr:nth-child(even) td { background: #f1f1f1; }
+    .svc-name { font-weight: 600; color: var(--text-dark); }
+    .svc-desc { color: #777; font-size: 12px; margin-top: 3px; }
+    .col-price { font-weight: bold; color: var(--action-hover); }
+    .unit { color: #888; font-weight: normal; font-size: 12px; }
+    .badge {
+        display: inline-block;
+        background: var(--promo);
+        color: var(--text-light);
+        font-size: 11px;
+        padding: 2px 8px;
+        border-radius: 10px;
+        margin-left: 8px;
+        vertical-align: middle;
+    }
+
+    /* ---------- KUPÓN ---------- */
+    .coupon { text-align: center; margin-top: 22px; }
+    .coupon-box {
+        background: var(--content);
+        color: var(--text-light);
+        display: inline-flex;
+        align-items: center;
+        gap: 14px;
+        padding: 10px 18px;
+        border-radius: 3px;
+        font-size: 14px;
+    }
+    .coupon-field {
+        color: var(--text-muted);
+        font-style: italic;
+        font-size: 13px;
+    }
+    .coupon-apply {
+        background: var(--action);
+        color: var(--text-light);
+        border: none;
+        padding: 6px 16px;
+        border-radius: 2px;
+        font-size: 13px;
+        cursor: pointer;
+    }
+
+    .note {
+        text-align: center;
+        font-size: 12px;
+        color: #999;
+        margin-top: 16px;
+        font-style: italic;
+    }
+
+    /* ---------- FOOTER ---------- */
+    .footer {
+        background: var(--area);
+        border: 1px dashed var(--area-border);
+        padding: 28px 30px;
+        margin-top: 18px;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        gap: 20px;
+    }
+    .footer-links { display: flex; gap: 32px; flex-wrap: wrap; }
+    .footer-links a { color: #666; text-decoration: none; font-size: 14px; }
+    .footer-copy { color: #888; font-size: 12px; margin-top: 12px; grid-column: 1 / -1; }
+    .social { display: flex; gap: 8px; }
+    .social-icon { background: var(--content); width: 36px; height: 36px; border-radius: 3px; }
+
+    /* ---------- LEGENDA ---------- */
+    .legend {
+        margin-top: 24px;
+        padding: 16px;
+        border-top: 1px dashed var(--dashed);
+        display: flex;
+        gap: 24px;
+        justify-content: center;
+        flex-wrap: wrap;
+        font-size: 13px;
+        color: #555;
+    }
+    .legend-item { display: flex; align-items: center; gap: 8px; }
+    .legend-swatch { width: 18px; height: 18px; border-radius: 2px; border: 1px solid rgba(0,0,0,0.15); }
+    .sw-area { background: var(--area); }
+    .sw-content { background: var(--content); }
+    .sw-action { background: var(--action); }
+    .sw-promo { background: var(--promo); }
+
+    @media (max-width: 800px) {
+        .nav { flex-wrap: wrap; }
+        .price-table caption { font-size: 15px; }
+    }
+</style>
+</head>
+<body>
+
+<div class="prototype-wrapper">
+
+    <!-- ===================== HEADER ===================== -->
+	<header class="header">
+			<div class="logo">LOGO</div>
+			
+			<a href="menu.html" class="menu-icon" style="text-decoration: none;">☰ Menu</a>
+			
+			<nav class="nav">
+				<a href="nabidka.html">Nabídka</a>
+				<a href="lekce.html">Lekce</a>
+				<a href="videa.html">Videa</a>
+				<a href="cenik.html">Ceník</a>
+				<a href="prihlasit.html">Příhlášení</a>
+			</nav>
+			
+			<button class="btn btn-content" onclick="window.location.href='prihlasit.html'">Přihlásit</button>
+			<button class="btn btn-action">Začít zdarma</button>
+	</header>
+    <!-- ===================== PAGE TITLE ===================== -->
+    <div class="page-title">
+        <h1>Ceník doplňkových služeb</h1>
+        <p>Nadstandardní služby nad rámec členství. Ceny jsou uvedeny vč. DPH a platí pro registrované členy.</p>
+    </div>
+
+    <!-- ===================== PROMO BAR ===================== -->
+    <div class="promo-bar">
+        <span>Promo: Získejte 20 % slevu na první doplňkovou službu s kódem VITFIT20 — platí do 30.4.</span>
+        <button class="promo-close" aria-label="Zavřít">✕</button>
+    </div>
+
+    <!-- ===================== OSOBNÍ TRÉNINK A PORADENSTVÍ ===================== -->
+    <p class="section-label">Osobní trénink a poradenství</p>
+    <div class="price-table accent">
+        <table>
+            <caption><span class="cap-icon"></span>Individuální služby trenéra</caption>
+            <thead>
+                <tr>
+                    <th>Služba</th>
+                    <th class="col-price">Cena</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="svc-name">Osobní trénink — 1 lekce</div>
+                        <div class="svc-desc">Individuální online trénink s certifikovaným trenérem (60 min).</div>
+                    </td>
+                    <td class="col-price">650 Kč <span class="unit">/ lekce</span></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="svc-name">Osobní trénink — balíček 5 lekcí <span class="badge">−10 %</span></div>
+                        <div class="svc-desc">Pět individuálních lekcí za zvýhodněnou cenu.</div>
+                    </td>
+                    <td class="col-price">2 925 Kč <span class="unit">/ balíček</span></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="svc-name">Osobní trénink — balíček 10 lekcí <span class="badge">−15 %</span></div>
+                        <div class="svc-desc">Deset individuálních lekcí s nejvýhodnější sazbou.</div>
+                    </td>
+                    <td class="col-price">5 525 Kč <span class="unit">/ balíček</span></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="svc-name">Nutriční poradenství</div>
+                        <div class="svc-desc">Konzultace s výživovým specialistou (45 min).</div>
+                    </td>
+                    <td class="col-price">490 Kč <span class="unit">/ konzultace</span></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="svc-name">Individuální jídelníček na míru</div>
+                        <div class="svc-desc">Sestavení personalizovaného jídelníčku na 4 týdny.</div>
+                    </td>
+                    <td class="col-price">890 Kč <span class="unit">/ plán</span></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="svc-name">Individuální tréninkový plán</div>
+                        <div class="svc-desc">Tréninkový plán přizpůsobený vašim cílům.</div>
+                    </td>
+                    <td class="col-price">790 Kč <span class="unit">/ plán</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ===================== PREMIUM OBSAH A PODPORA ===================== -->
+    <p class="section-label">Premium obsah a podpora</p>
+    <div class="price-table">
+        <table>
+            <caption><span class="cap-icon"></span>Digitální obsah a služby</caption>
+            <thead>
+                <tr>
+                    <th>Služba</th>
+                    <th class="col-price">Cena</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="svc-name">Premium video obsah</div>
+                        <div class="svc-desc">Přístup k exkluzivní knihovně video lekcí nad rámec členství.</div>
+                    </td>
+                    <td class="col-price">199 Kč <span class="unit">/ měsíc</span></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="svc-name">VIP podpora 24/7</div>
+                        <div class="svc-desc">Prioritní chat podpora dostupná nepřetržitě.</div>
+                    </td>
+                    <td class="col-price">149 Kč <span class="unit">/ měsíc</span></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="svc-name">Detailní statistiky a analýza</div>
+                        <div class="svc-desc">Rozšířené reporty pokroku, grafy a porovnání s ostatními.</div>
+                    </td>
+                    <td class="col-price">99 Kč <span class="unit">/ měsíc</span></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="svc-name">Jednorázové vstupné na živou lekci</div>
+                        <div class="svc-desc">Účast na jedné živé lekci bez nutnosti členství.</div>
+                    </td>
+                    <td class="col-price">120 Kč <span class="unit">/ vstup</span></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="svc-name">Vstupní kondiční test</div>
+                        <div class="svc-desc">Úvodní měření a vyhodnocení fyzické kondice.</div>
+                    </td>
+                    <td class="col-price">350 Kč <span class="unit">/ test</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ===================== KUPÓN ===================== -->
+    <div class="coupon">
+        <div class="coupon-box">
+            <span class="coupon-field">[ Zadejte slevový kód ]</span>
+            <button class="coupon-apply">Uplatnit</button>
+        </div>
+    </div>
+
+    <p class="note">Ceny doplňkových služeb jsou uvedeny včetně DPH. Změna cen vyhrazena.</p>
+
+    <!-- ===================== FOOTER ===================== -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="#o-nas">O nás</a>
+            <a href="#kontakt">Kontakt</a>
+            <a href="#gdpr">GDPR</a>
+            <a href="#podminky">Podmínky</a>
+        </div>
+        <div class="social" aria-label="Sociální sítě">
+            <div class="social-icon"></div>
+            <div class="social-icon"></div>
+            <div class="social-icon"></div>
+        </div>
+        <div class="footer-copy">© 2025 VirtualFit &nbsp;·&nbsp; Soc. sítě</div>
+    </footer>
+
+    <!-- ===================== LEGENDA ===================== -->
+    <div class="legend">
+        <div class="legend-item"><span class="legend-swatch sw-area"></span>Oblast / sekce</div>
+        <div class="legend-item"><span class="legend-swatch sw-content"></span>Obsah (dokument/data)</div>
+        <div class="legend-item"><span class="legend-swatch sw-action"></span>Tlačítko / interakce</div>
+        <div class="legend-item"><span class="legend-swatch sw-promo"></span>Promo / zpráva</div>
+    </div>
+
+</div>
+
+</body>
+</html>
